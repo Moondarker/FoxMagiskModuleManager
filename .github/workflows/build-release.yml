@@ -49,6 +49,24 @@ jobs:
       # UPLOAD ARTIFACT SECTION
       # Will be shortner, when https://github.com/actions/upload-artifact/pull/354 will be merged
       # FoxMMM-default-release
+      - name: List files 1
+        run: ls app/build/outputs/
+
+      - name: List files 2
+        run: ls app/build/outputs/apk/
+
+      - name: List files 3
+        run: ls app/build/outputs/apk/default/
+
+      - name: List files 4
+        run: ls app/build/outputs/apk/fdroid/
+
+      - name: List files 5
+        run: ls app/build/outputs/apk/default/release/
+
+      - name: List files 6
+        run: ls app/build/outputs/apk/fdroid/release/
+
       - name: Upload FoxMMM-default-arm64-v8a-release
         uses: actions/upload-artifact@v3
         with:
