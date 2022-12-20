@@ -1,0 +1,111 @@
+name: Generate APK Release
+
+on:
+  push:
+    branches:
+      - '*'
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - '*'
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'adopt'
+          cache: gradle
+        
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+        
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Build apk release
+        run: ./gradlew app:assembleDefaultRelease
+
+      - name: Build apk fdroid-release
+        run: ./gradlew app:assembleFdroidRelease
+
+      # UPLOAD ARTIFACT SECTION
+      # Will be shortner, when https://github.com/actions/upload-artifact/pull/354 will be merged
+      # FoxMMM-default-release
+      - name: Upload FoxMMM-default-arm64-v8a-release
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-default-arm64-v8a-release
+          path: app/build/outputs/apk/default/release/FoxMMM-v*-default-arm64-v8a-release.apk
+          
+      - name: Upload FoxMMM-default-armeabi-v7a-release
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-default-armeabi-v7a-release
+          path: app/build/outputs/apk/default/release/FoxMMM-v*-default-armeabi-v7a-release.apk
+      
+      - name: Upload FoxMMM-default-universal-release
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-default-universal-release
+          path: app/build/outputs/apk/default/release/FoxMMM-v*-default-universal-release.apk
+          
+      - name: Upload FoxMMM-default-x86-release
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-default-x86-release
+          path: app/build/outputs/apk/default/release/FoxMMM-v*-default-x86-release.apk      
+          
+      - name: Upload FoxMMM-default-x86_64-release  
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-default-x86_64-release
+          path: app/build/outputs/apk/default/release/FoxMMM-v*-default-x86_64-release.apk
+      
+      # FoxMMM-fdroid-release
+      - name: Upload FoxMMM-fdroid-arm64-v8a-release
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-fdroid-arm64-v8a-release
+          path: app/build/outputs/apk/fdroid/release/FoxMMM-v*-fdroid-arm64-v8a-release.apk
+      
+      - name: Upload FoxMMM-fdroid-armeabi-v7a-release  
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-fdroid-armeabi-v7a-release
+          path: app/build/outputs/apk/fdroid/release/FoxMMM-v*-fdroid-armeabi-v7a-release.apk
+      
+      - name: Upload FoxMMM-fdroid-universal-release
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-fdroid-universal-release
+          path: app/build/outputs/apk/fdroid/release/FoxMMM-v*-fdroid-universal-release.apk
+         
+      - name: Upload FoxMMM-fdroid-x86-release   
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-fdroid-x86-release
+          path: app/build/outputs/apk/fdroid/release/FoxMMM-v*-fdroid-x86-release.apk
+
+      - name: Upload FoxMMM-fdroid-x86_64-release  
+        uses: actions/upload-artifact@v3
+        with:
+          name: FoxMMM-fdroid-x86_64-release
+          path: app/build/outputs/apk/fdroid/release/FoxMMM-v*-fdroid-x86_64-release.apk
